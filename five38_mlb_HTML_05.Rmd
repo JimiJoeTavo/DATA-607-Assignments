@@ -1,0 +1,88 @@
+---
+title: "five38_mlb_HTML"
+output: html_document
+date: "2025-02-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Week 1 - Assignment: MLB ELO Dataset from 538.com
+
+For this first assignment, I am creating a dataframe from a 538 data repository and posting it to my RPUBS account.
+
+
+### Analysis objective
+
+My objective is to isolate the playoff games from this dataset.
+
+
+### Loading & displaying dataframe
+
+Load the data into a dataframe and display the internal structure of this dataframe object.
+
+```{r}
+library(tidyverse)
+five38_mlb <- read_csv("https://projects.fivethirtyeight.com/mlb-api/mlb_elo.csv")
+str(five38_mlb)
+```
+
+
+### Creating a subset focusing on the Playoff Rounds.
+
+```{r}
+five38_mlb_subset <- five38_mlb[c("date", "season", "playoff", "team1", "team2", "score1", "score2")]
+```
+
+
+### Reducing the observations of the subset to only actual playoff games.
+
+```{r}
+mlb_playoff_games <- na.omit(five38_mlb_subset)
+str(mlb_playoff_games)
+```
+
+
+### Renaming column names to improve dataframe readability.
+
+```{r}
+mlb_playoff_games <- mlb_playoff_games |> 
+    rename(
+        Date_of_game = 'date',
+        Year_of_season = 'season',
+        Playoff_Round = 'playoff',
+        Home_Team = 'team1',
+        Away_Team = 'team2',
+        Home_Team_Score = 'score1',
+        Away_Team_Score = 'score2'
+    )
+```
+
+
+### Renaming categorical data to make Playoff Rounds more readable.
+
+```{r}
+mlb_playoff_games |>
+    mutate(
+        Playoff_Round = recode(Playoff_Round, 
+                         'w' = 'World_Series', 
+                         'l' = 'Leage_Championship', 
+                         'd' = 'Division_Series', 
+                         'c' = 'Wild_Card')
+    )
+```
+
+
+## Conclusion: 
+#### Objective to use 538 MLB ELO dataset to create a subset of only playoff games was achieved.
+
+
+
+
+
+
+
+
+
+
